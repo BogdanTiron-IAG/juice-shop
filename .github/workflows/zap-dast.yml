@@ -17,26 +17,22 @@ jobs:
           - 3000:3000
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Wait for Juice Shop
         run: sleep 30
 
-      - name: ZAP Full Scan
-        uses: zaproxy/action-full-scan@v0.8.0
-        with:
-          target: 'http://localhost:3000'
-          fail_action: false
-          allow_issue_writing: false
-          upload_artifact: false  
-          artifact_name: zapreport
+      - name: Run ZAP Full Scan (Docker)
+        run: |
+          docker run --network host \
+          owasp/zap2docker-stable zap-full-scan.py \
+            -t http://localhost:3000 \
+            -J zap_report.json \
+            -r zap_report.html
 
-      - name: Upload ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: zapreport
-          path: |
-            **/zap_report.html
-            **/zap_report.json
-            **/zap_report.md
+      - name: Show ZAP HTML report path
+        run: |
+          echo "ZAP report generated:"
+          ls -alh zap_report*
