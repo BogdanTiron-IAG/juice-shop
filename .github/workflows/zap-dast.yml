@@ -26,7 +26,7 @@ jobs:
       - name: ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.8.0
         with:
-          target: '<http://localhost:3000'>
+          target: 'http://localhost:3000'
 
       - name: Show ZAP HTML report path
         run: |
